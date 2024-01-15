@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from typing import Union 
 from pydantic import BaseModel
 import pandas as pd
+import os
 
 class PayloadItem(BaseModel):
     age: int
@@ -26,16 +27,18 @@ app = FastAPI()
 async def say_hello():
     return {"greeting": "Hello World!"}
 
-@app.post("/prediction/")
-async def output(payload: PayloadItem):
-    data = pd.DataFrame(payload)
-    with open(encoder_path, "rb") as f: 
-        encoder = pickle.load(f)
-    with open(lb_path, "rb") as f: 
-        lb = pickle.load(f)
-    model = Booster(model_file=model_path)
+# @app.post("/prediction/")
+# async def output(payload: PayloadItem):
+#     os.chdir('/home/vdias94/app-fastapi/starter')
+    
+#     data = pd.DataFrame(payload)
+#     with open(encoder_path, "rb") as f: 
+#         encoder = pickle.load(f)
+#     with open(lb_path, "rb") as f: 
+#         lb = pickle.load(f)
+#     model = Booster(model_file=model_path)
 
-    y_pred = inference(model, X_test)
+#     y_pred = inference(model, X_test)
     
     
     
