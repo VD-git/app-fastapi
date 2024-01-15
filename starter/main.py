@@ -5,19 +5,19 @@ from pydantic import BaseModel
 import pandas as pd
 
 class PayloadItem(BaseModel):
-    age: int 
+    age: int
     workclass: str
-    fnlgt: int 
+    fnlgt: int
     education: str
-    education-num: int 
+    education-num: int
     marital-status: str
     occupation: str
     relationship: str
     race: str
     sex: str
-    capital-gain: int 
-    capital-loss: int 
-    hours-per-week: int 
+    capital-gain: int
+    capital-loss: int
+    hours-per-week: int
     native-country: str
 
 app = FastAPI()
