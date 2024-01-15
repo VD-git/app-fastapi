@@ -9,16 +9,16 @@ class PayloadItem(BaseModel):
     workclass: str
     fnlgt: int
     education: str
-    education-num: int
-    marital-status: str
+    educationnum: int
+    maritalstatus: str
     occupation: str
     relationship: str
     race: str
     sex: str
-    capital-gain: int
-    capital-loss: int
-    hours-per-week: int
-    native-country: str
+    capitalgain: int
+    capitalloss: int
+    hoursperweek: int
+    nativecountry: str
 
 app = FastAPI()
 
