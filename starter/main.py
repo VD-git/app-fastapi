@@ -35,18 +35,7 @@ async def output(payload: PayloadItem):
         lb = pickle.load(f)
     model = Booster(model_file=model_path)
 
-# Perform analysis of the metrics of the model, dump a json for future analysis
-y_pred = inference(model, X_test)
-    
-    
-    
-
-
-     lb = pickle.load(f)
-    model = Booster(model_file=model_path)
-
-# Perform analysis of the metrics of the model, dump a json for future analysis
-y_pred = inference(model, X_test)
+    y_pred = inference(model, X_test)
     
     
     

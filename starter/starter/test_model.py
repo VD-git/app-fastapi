@@ -20,7 +20,7 @@ def test_integer_cols(data):
 
 def test_output_type(real_predictions):
     y_real, y_pred = real_predictions
-    assert y_pred.dtype == 'int64', f"Check the output type, it was found a type of {predictions.dtype}, while it was expected int64"
+    assert y_pred.dtype == 'int64', f"Check the output type, it was found a type of {y_pred.dtype}, while it was expected int64"
 
 def test_metric_precision(metrics, real_predictions):
     y_real, y_pred = real_predictions
