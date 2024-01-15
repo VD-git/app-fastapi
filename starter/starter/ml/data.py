@@ -1,6 +1,27 @@
+import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer, OneHotEncoder
 
+
+def remove_spaces(
+    income_df: pd.DataFrame
+):
+    """ Remove white spaces that are inherit from the pd.DataFrame imported
+    Uses the function strip in order to remove the spaces.
+    Inputs
+    ------
+    df : pd.DataFrame
+         Raw data set
+    Returns
+    -------
+    outcome_df: pd.DataFrame
+                Cleaned data set
+    """
+    outcome_df = income_df.copy()
+    outcome_df.columns = outcome_df.columns.str.strip()
+    for col in outcome_df.dtypes[outcome_df.dtypes == 'object'].index:
+        outcome_df[col] = outcome_df[col].str.strip()
+    return outcome_df
 
 def process_data(
     X, categorical_features=[], label=None, training=True, encoder=None, lb=None

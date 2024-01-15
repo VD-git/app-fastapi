@@ -1,8 +1,11 @@
+import pandas as pd
 from sklearn.metrics import fbeta_score, precision_score, recall_score
-
+from sklearn.model_selection import GridSearchCV
+from lightgbm import LGBMClassifier
+import numpy as np
 
 # Optional: implement hyperparameter tuning.
-def train_model(X_train, y_train):
+def train_model(X_train, y_train, params=None):
     """
     Trains a machine learning model and returns it.
 
@@ -12,13 +15,23 @@ def train_model(X_train, y_train):
         Training data.
     y_train : np.array
         Labels.
+    params : dict
+        Dictionary of parameters in order to perform the hyperparameter tuning.
     Returns
     -------
     model
         Trained machine learning model.
     """
+    if params is None:
+        LGBM=LGBMClassifier(verbose=-1)
+        LGBM.fit(X_train, y_train)
+    else:
+        GS = GridSearchCV(estimator=LGBMClassifier(verbose=-1), param_grid=params)
+        GS.fit(X_train, y_train)
 
-    pass
+        LGBM=LGBMClassifier(**GS.best_params_, verbose=-1)
+        LGBM.fit(X_train, y_train)
+    return LGBM
 
 
 def compute_model_metrics(y, preds):
@@ -48,7 +61,7 @@ def inference(model, X):
 
     Inputs
     ------
-    model : ???
+    model : Light Gradient Boosting Method
         Trained machine learning model.
     X : np.array
         Data used for prediction.
@@ -57,4 +70,36 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    pass
+    preds = np.array([1 if y >= 0.50 else 0 for y in model.predict(X)])
+    return preds
+
+def model_slices_metrics(test: pd.DataFrame, real: np.array, prediction: np.array, slice_cols: list):
+    """ Perform a slice analysis of the predictions
+    
+    Inputs
+    ------
+    test : pd.DataFrame
+        Data set of the test data.
+    real : np.array
+        Data from the real test output.
+    prediction : np.array
+        Data from the test predictions.
+    slice_cols : list
+        List of columns to be sliced
+    Returns
+    -------
+    data : pd.DataFrame
+        A table with the sliced performance.
+    """
+    data = []
+    combined_df = pd.concat(\
+        [test.reset_index().drop(['index'], axis = 1),\
+         pd.DataFrame(real, columns = ['real']),\
+         pd.DataFrame(prediction, columns = ['prediction'])\
+        ], axis = 1)
+    for col in slice_cols:
+        for feature in combined_df[col].unique():
+            eval_set = combined_df[combined_df[col] == feature]
+            precision, recall, fbeta = compute_model_metrics(eval_set['real'], eval_set['prediction'])
+            data.append({"column": col, "slice": feature, "size": len(eval_set), "precision": precision, "recall": recall, "fbeta": fbeta})
+    return pd.DataFrame(data)
