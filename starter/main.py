@@ -28,7 +28,7 @@ app = FastAPI()
 
 @app.get("/")
 async def say_hello():
-    return {"greeting": "Hello World!"}
+    return {"greeting": "Hello World Mate!"}
 
 @app.post("/prediction/")
 async def output(payload: PayloadItem):
