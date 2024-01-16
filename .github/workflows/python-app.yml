@@ -37,3 +37,8 @@ jobs:
     - name: Test with pytest
       run: |
         pytest starter/starter/test_model.py -vv --csv "starter/data/census.csv" --json "starter/model/metrics.json" --encoder "starter/model/encoder" --lb "starter/model/lb" --model "starter/model/model.txt"
+    - name: Deploy
+      env:
+        deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
