@@ -4,7 +4,7 @@ from lightgbm import Booster
 from starter.ml.data import process_data
 from starter.ml.model import inference
 import pickle
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import pandas as pd
 import os
 
@@ -13,16 +13,16 @@ class PayloadItem(BaseModel):
     workclass: str
     fnlgt: int
     education: str
-    educationnum: int
-    maritalstatus: str
+    educationnum: int = Field(alias="education-num")
+    maritalstatus: str = Field(alias="marital-status")
     occupation: str
     relationship: str
     race: str
     sex: str
-    capitalgain: int
-    capitalloss: int
-    hoursperweek: int
-    nativecountry: str
+    capitalgain: int = Field(alias="capital-gain")
+    capitalloss: int = Field(alias="capital-loss")
+    hoursperweek: int = Field(alias="hours-per-week")
+    nativecountry: str = Field(alias="native-country")
 
 app = FastAPI()
 
