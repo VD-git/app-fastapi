@@ -4,7 +4,7 @@ import requests
 from starter.ml.model import (compute_model_metrics)
 import os
 from fastapi.testclient import TestClient
-from starter.main import app
+from main import app
 
 def test_number_of_rows(data):
     assert len(data) > 1000, f"The amount of chunk tested should be greater than 1000, not {len(data)}"
@@ -59,14 +59,8 @@ def test_api_get_output_values(server):
     payload = r.json() #json.load(r)
     assert list(payload.values())[0] == "Hello Mate Gabriel!"
 
-def test_root():
-    '''Test the root endpoint.'''
-    client = TestClient(app)
-    response = client.get("/")
-    assert response.status_code == 200
-
 def test_api_post_negative_status(server):
-    client = TestClient(server)
+    client = TestClient(app)
     payload = {
         "age": 39,
         "workclass": "State-gov",
@@ -83,7 +77,7 @@ def test_api_post_negative_status(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
+    r = client.post('/prediction', data = json.dumps(payload))
     assert r.status_code == 200
 
 def test_api_post_negative_content():
@@ -105,11 +99,12 @@ def test_api_post_negative_content():
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
+    r = client.post('/prediction', data = json.dumps(payload))
     output = r.json() #json.load(r)
     assert output['response'] == 0
 
 def test_api_post_positive_status(server):
+    client = TestClient(app)
     payload = {
         "age": 39,
         "workclass": "State-gov",
@@ -126,10 +121,11 @@ def test_api_post_positive_status(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
+    r = client.post('/prediction', data = json.dumps(payload))
     assert r.status_code == 200
 
 def test_api_post_positive_content(server):
+    client = TestClient(app)
     payload = {
         "age": 39,
         "workclass": "State-gov",
@@ -146,7 +142,7 @@ def test_api_post_positive_content(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
+    r = client.post('/prediction', data = json.dumps(payload))
     output = r.json() #json.load(r)
     assert output['response'] == 1
 

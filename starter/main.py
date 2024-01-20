@@ -59,9 +59,15 @@ async def say_hello():
 async def output(payload: PayloadItem):
 
     # Building path to be imported
-    encoder_path = os.path.join(root_dir, 'model', 'encoder')
-    lb_path = os.path.join(root_dir, 'model', 'lb')
-    model_path = os.path.join(root_dir, 'model', 'model.txt')
+    if 'starter' in root_dir:
+        encoder_path = os.path.join(root_dir, 'model', 'encoder')
+        lb_path = os.path.join(root_dir, 'model', 'lb')
+        model_path = os.path.join(root_dir, 'model', 'model.txt')
+    else:
+        encoder_path = os.path.join(root_dir, 'starter', 'model', 'encoder')
+        lb_path = os.path.join(root_dir, 'starter', 'model', 'lb')
+        model_path = os.path.join(root_dir, 'starter', 'model', 'model.txt')
+
     json_file = {
         "age": payload.age,
         "workclass": payload.workclass,
