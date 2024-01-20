@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import pickle
 import pytest
+import time
 from main import app
 from multiprocessing import Process
 import requests
@@ -24,7 +25,8 @@ def run_server():
 @pytest.fixture
 def server():
     proc = Process(target=run_server, args=(), daemon=True)
-    proc.start() 
+    proc.start()
+    time.sleep(2)
     yield
     proc.kill() # Cleanup after test
 
