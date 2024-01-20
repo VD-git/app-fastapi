@@ -43,16 +43,16 @@ def test_metric_fbeta(metrics, real_predictions):
     assert metrics.get("fbeta") < fbeta, f"Fbeta for the whole data set is expected to be greater than only for test: whole data set - {fbeta} vs. test - {sample_metric}"
 
 def test_api_get_status():
-    r = requests.get("http://app:8000/")
+    r = requests.get("http://127.0.0.1:8000/")
     assert r.status_code == 200
 
 def test_api_get_output_keys(server):
-    r = requests.get("http://app:8000/")
+    r = requests.get("http://127.0.0.1:8000/")
     payload = r.json() #json.load(r)
     assert list(payload.keys())[0] == "greeting"
 
 def test_api_get_output_values(server):
-    r = requests.get("http://app:8000/")
+    r = requests.get("http://127.0.0.1:8000/")
     payload = r.json() #json.load(r)
     assert list(payload.values())[0] == "Hello Mate Gabriel!"
 
@@ -73,7 +73,7 @@ def test_api_post_negative_status(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://app:8000/prediction/", data = json.dumps(payload))
+    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
     assert r.status_code == 200
 
 def test_api_post_negative_content(server):
@@ -93,7 +93,7 @@ def test_api_post_negative_content(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://app:8000/prediction/", data = json.dumps(payload))
+    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
     output = r.json() #json.load(r)
     assert output['response'] == 0
 
@@ -114,7 +114,7 @@ def test_api_post_positive_status(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://app:8000/prediction/", data = json.dumps(payload))
+    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
     assert r.status_code == 200
 
 def test_api_post_positive_content(server):
@@ -134,7 +134,7 @@ def test_api_post_positive_content(server):
         "hours-per-week": 40,
         "native-country": "United-States"
     }
-    r = requests.post("http://app:8000/prediction/", data = json.dumps(payload))
+    r = requests.post("http://127.0.0.1:8000/prediction/", data = json.dumps(payload))
     output = r.json() #json.load(r)
     assert output['response'] == 1
 
