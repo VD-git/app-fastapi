@@ -3,6 +3,10 @@ import json
 import pandas as pd
 import pickle
 import pytest
+from main import app
+from multiprocessing import Process
+import requests
+import uvicorn
 from starter.ml.data import (process_data, remove_spaces)
 from starter.ml.model import (inference)
 
@@ -13,6 +17,16 @@ def pytest_addoption(parser):
     parser.addoption("--lb", action="store")
     parser.addoption("--model", action="store")
 
+def run_server():
+    uvicorn.run(app)
+
+# A way to call the app while the tests are being performed with pytest
+@pytest.fixture
+def server():
+    proc = Process(target=run_server, args=(), daemon=True)
+    proc.start() 
+    yield
+    proc.kill() # Cleanup after test
 
 @pytest.fixture(scope='session')
 def data(request):
