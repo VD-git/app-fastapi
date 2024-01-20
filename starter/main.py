@@ -24,6 +24,29 @@ class PayloadItem(BaseModel):
     hoursperweek: int = Field(alias="hours-per-week")
     nativecountry: str = Field(alias="native-country")
 
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "age": 39,
+                    "workclass": "State-gov",
+                    "fnlgt": 77516,
+                    "education": "Bachelors",
+                    "education-num": 13,
+                    "marital-status": "Never-married",
+                    "occupation": "Adm-clerical",
+                    "relationship": "Not-in-family",
+                    "race": "White",
+                    "sex": "Male",
+                    "capital-gain": 21740,
+                    "capital-loss": 0,
+                    "hours-per-week": 40,
+                    "native-country": "United-States"
+                }
+            ]
+        }
+    }
+
 app = FastAPI()
 
 @app.get("/")
