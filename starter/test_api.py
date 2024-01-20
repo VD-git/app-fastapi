@@ -13,52 +13,92 @@ def test_api_get_status():
 
 def test_api_get_output_keys():
     r = client.get("/")
-    payload = json.load(r)
+    payload = r.json() #json.load(r)
     assert list(payload.keys())[0] == "greeting"
 
 def test_api_get_output_values():
     r = client.get("/")
-    payload = json.load(r)
-    assert list(payload.values())[0] == "Hello World!"
+    payload = r.json() #json.load(r)
+    assert list(payload.values())[0] == "Hello Mate Gabriel!"
 
-def test_api_post_negative():
+def test_api_post_negative_status():
     payload = {
         "age": 39,
         "workclass": "State-gov",
         "fnlgt": 77516,
         "education": "Bachelors",
-        "educationnum": 13,
-        "maritalstatus": "Never-married",
+        "education-num": 13,
+        "marital-status": "Never-married",
         "occupation": "Adm-clerical",
         "relationship": "Not-in-family",
         "race": "White",
         "sex": "Male",
-        "capitalgain": 2174,
-        "capitalloss": 0,
-        "hoursperweek": 40,
-        "nativecountry": "United-States"
+        "capital-gain": 2174,
+        "capital-loss": 0,
+        "hours-per-week": 40,
+        "native-country": "United-States"
     }
     r = client.post("/prediction/", data = json.dumps(payload))
-    output = json.load(r)
-    assert output.get('response') == 0
+    assert r.status_code == 200
 
-def test_api_post_positive():
+def test_api_post_negative_content():
     payload = {
         "age": 39,
         "workclass": "State-gov",
         "fnlgt": 77516,
         "education": "Bachelors",
-        "educationnum": 13,
-        "maritalstatus": "Never-married",
+        "education-num": 13,
+        "marital-status": "Never-married",
         "occupation": "Adm-clerical",
         "relationship": "Not-in-family",
         "race": "White",
         "sex": "Male",
-        "capitalgain": 21740,
-        "capitalloss": 0,
-        "hoursperweek": 40,
-        "nativecountry": "United-States"
+        "capital-gain": 2174,
+        "capital-loss": 0,
+        "hours-per-week": 40,
+        "native-country": "United-States"
     }
     r = client.post("/prediction/", data = json.dumps(payload))
-    output = json.load(r)
-    assert output.get('response') == 1
+    output = r.json() #json.load(r)
+    assert output['response'] == 0
+
+def test_api_post_positive_status():
+    payload = {
+        "age": 39,
+        "workclass": "State-gov",
+        "fnlgt": 77516,
+        "education": "Bachelors",
+        "education-num": 13,
+        "marital-status": "Never-married",
+        "occupation": "Adm-clerical",
+        "relationship": "Not-in-family",
+        "race": "White",
+        "sex": "Male",
+        "capital-gain": 21740,
+        "capital-loss": 0,
+        "hours-per-week": 40,
+        "native-country": "United-States"
+    }
+    r = client.post("/prediction/", data = json.dumps(payload))
+    assert r.status_code == 200
+
+def test_api_post_positive_content():
+    payload = {
+        "age": 39,
+        "workclass": "State-gov",
+        "fnlgt": 77516,
+        "education": "Bachelors",
+        "education-num": 13,
+        "marital-status": "Never-married",
+        "occupation": "Adm-clerical",
+        "relationship": "Not-in-family",
+        "race": "White",
+        "sex": "Male",
+        "capital-gain": 21740,
+        "capital-loss": 0,
+        "hours-per-week": 40,
+        "native-country": "United-States"
+    }
+    r = client.post("/prediction/", data = json.dumps(payload))
+    output = r.json() #json.load(r)
+    assert output['response'] == 1
