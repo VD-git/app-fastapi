@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 import pandas as pd
 import os
 
+root_dir = os.path.dirname(os.path.realpath('__file__'))
+
 class PayloadItem(BaseModel):
     age: int
     workclass: str
@@ -57,9 +59,9 @@ async def say_hello():
 async def output(payload: PayloadItem):
 
     # Building path to be imported
-    encoder_path = os.path.join(os.getcwd(), 'model', 'encoder')
-    lb_path = os.path.join(os.getcwd(), 'model', 'lb')
-    model_path = os.path.join(os.getcwd(), 'model', 'model.txt')
+    encoder_path = os.path.join(root_dir, 'model', 'encoder')
+    lb_path = os.path.join(root_dir, 'model', 'lb')
+    model_path = os.path.join(root_dir, 'model', 'model.txt')
     json_file = {
         "age": payload.age,
         "workclass": payload.workclass,

@@ -6,8 +6,6 @@ import os
 from fastapi.testclient import TestClient
 from main import app
 
-client = TestClient(app)
-
 def test_number_of_rows(data):
     assert len(data) > 1000, f"The amount of chunk tested should be greater than 1000, not {len(data)}"
 
@@ -62,6 +60,7 @@ def test_api_get_output_values(server):
     assert list(payload.values())[0] == "Hello Mate Gabriel!"
 
 def test_api_post_negative_status(server):
+    client = TestClient(server)
     payload = {
         "age": 39,
         "workclass": "State-gov",
