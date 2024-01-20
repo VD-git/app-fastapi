@@ -2,6 +2,11 @@ import json
 import pandas as pd
 import requests
 from starter.ml.model import (compute_model_metrics)
+import os
+from fastapi.testclient import TestClient
+from main import app
+
+client = TestClient(app)
 
 def test_number_of_rows(data):
     assert len(data) > 1000, f"The amount of chunk tested should be greater than 1000, not {len(data)}"
@@ -42,7 +47,7 @@ def test_metric_fbeta(metrics, real_predictions):
     sample_metric = metrics.get("fbeta")
     assert metrics.get("fbeta") < fbeta, f"Fbeta for the whole data set is expected to be greater than only for test: whole data set - {fbeta} vs. test - {sample_metric}"
 
-def test_api_get_status():
+def test_api_get_status(server):
     r = requests.get("http://127.0.0.1:8000/")
     assert r.status_code == 200
 
