@@ -51,6 +51,22 @@ class PayloadItem(BaseModel):
 
 app = FastAPI()
 
+# Loading starting up the app to avoid latency
+@app.on_event("startup")
+async def startup_event(): 
+    global MODEL, ENCODER, LB
+    # Building path to be imported
+    encoder_path = os.path.join(root_dir, 'model', 'encoder') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'encoder')
+    lb_path = os.path.join(root_dir, 'model', 'lb') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'lb')
+    model_path = os.path.join(root_dir, 'model', 'model.txt') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'model.txt')
+
+    if os.path.isfile(encoder_path):
+        ENCODER = pickle.load(open(encoder_path, "rb"))
+    if os.path.isfile(lb_path):
+        LB = pickle.load(open(lb_path, "rb"))
+    if os.path.isfile(model_path):
+        MODEL = Booster(model_file=model_path)
+
 @app.get("/")
 async def say_hello():
     return {"greeting": "Hello Mate Gabriel!"}
@@ -59,14 +75,9 @@ async def say_hello():
 async def output(payload: PayloadItem):
 
     # Building path to be imported
-    if 'starter' in root_dir:
-        encoder_path = os.path.join(root_dir, 'model', 'encoder')
-        lb_path = os.path.join(root_dir, 'model', 'lb')
-        model_path = os.path.join(root_dir, 'model', 'model.txt')
-    else:
-        encoder_path = os.path.join(root_dir, 'starter', 'model', 'encoder')
-        lb_path = os.path.join(root_dir, 'starter', 'model', 'lb')
-        model_path = os.path.join(root_dir, 'starter', 'model', 'model.txt')
+    encoder_path = os.path.join(root_dir, 'model', 'encoder') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'encoder')
+    lb_path = os.path.join(root_dir, 'model', 'lb') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'lb')
+    model_path = os.path.join(root_dir, 'model', 'model.txt') if 'starter' in root_dir else os.path.join(root_dir, 'starter', 'model', 'model.txt')
 
     json_file = {
         "age": payload.age,
@@ -89,22 +100,23 @@ async def output(payload: PayloadItem):
     data = pd.DataFrame([json_file])
     
     # Importing models
-    with open(encoder_path, "rb") as f: 
-        encoder = pickle.load(f)
-    with open(lb_path, "rb") as f: 
-        lb = pickle.load(f)
-    model = Booster(model_file=model_path)
+    if os.path.isfile(encoder_path):
+        ENCODER = pickle.load(open(encoder_path, "rb"))
+    if os.path.isfile(lb_path):
+        LB = pickle.load( open(lb_path, "rb"))
+    if os.path.isfile(model_path):
+        MODEL = Booster(model_file=model_path)
     
     cat_features = ["workclass", "education", "marital-status", "occupation", "relationship", "race", "sex", "native-country"]
 
     # Preprocessing with the encoder
     X, _, _, _ = process_data(
         data, categorical_features=cat_features, label=None, training=False,
-        encoder=encoder, lb=lb
+        encoder=ENCODER, lb=LB
     )
 
     # Building the inference model
-    prediction = inference(model, X)
+    prediction = inference(MODEL, X)
 
     return {"response": int(prediction)}
     

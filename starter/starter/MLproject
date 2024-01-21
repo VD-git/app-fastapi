@@ -1,0 +1,32 @@
+name: train_model
+conda_env: conda.yml
+
+entry_points:
+  main:
+    parameters:
+
+      csv:
+        description: "File with the data"
+        type: string
+        default: "census.csv"
+
+      test_size:
+        description: "Size of the test split"
+        type: float
+        default: 0.2
+
+      params:
+        description: "Parameters to perform the training"
+        type: string
+        default: '{"num_leaves": [20, 40, 80], "max_depth": [4, 6, 8], "n_estimators": [200, 400]}'
+
+      cat_features:
+        description: "Categorical features to split the analysis"
+        type: string
+        default: 'workclass,education,marital-status,occupation,relationship,race,sex,native-country'
+
+    command: >-
+        python train_model.py  --csv {csv}\
+                               --test_size {test_size}\
+                               --params {params}\
+                               --cat_features {cat_features}

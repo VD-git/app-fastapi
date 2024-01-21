@@ -24,8 +24,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--payload",
         type=str,
-        help="Root for the names of the produced artifacts. The script will produce 2 artifacts: "
-             "{root}_train.csv and {root}_test.csv",
+        help="Payload for the model to make the inference",
         required=False,
         default='{"age": 39, "workclass": "State-gov", "fnlgt": 77516, "education": "Bachelors", "education-num": 13, "marital-status": "Never-married", "occupation": "Adm-clerical", "relationship": "Not-in-family", "race": "White", "sex": "Male", "capital-gain": 21740, "capital-loss": 0, "hours-per-week": 40, "native-country": "United-States"}'
     )

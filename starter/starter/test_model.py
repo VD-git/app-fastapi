@@ -46,16 +46,19 @@ def test_metric_fbeta(metrics, real_predictions):
     assert metrics.get("fbeta") < fbeta, f"Fbeta for the whole data set is expected to be greater than only for test: whole data set - {fbeta} vs. test - {sample_metric}"
 
 def test_api_get_status(server):
-    r = requests.get("http://127.0.0.1:8000/")
+    client = TestClient(app)
+    r = client.get('/')
     assert r.status_code == 200
 
 def test_api_get_output_keys(server):
-    r = requests.get("http://127.0.0.1:8000/")
+    client = TestClient(app)
+    r = client.get('/')
     payload = r.json() #json.load(r)
     assert list(payload.keys())[0] == "greeting"
 
 def test_api_get_output_values(server):
-    r = requests.get("http://127.0.0.1:8000/")
+    client = TestClient(app)
+    r = client.get('/')
     payload = r.json() #json.load(r)
     assert list(payload.values())[0] == "Hello Mate Gabriel!"
 
